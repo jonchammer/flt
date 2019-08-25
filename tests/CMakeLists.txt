@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.8)
+project(flt_tests LANGUAGES CXX)
+
+set(DEBUG_OPTIONS -g)
+set(RELEASE_OPTIONS -O3 -flto)
+
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build Type" FORCE)
+endif()
+message(STATUS "Flt Tests - Compiling in ${CMAKE_BUILD_TYPE} mode.")
+message(STATUS "  Debug Options   - ${DEBUG_OPTIONS}")
+message(STATUS "  Release Options - ${RELEASE_OPTIONS}")
+
+add_executable(flt_test test.cpp)
+target_compile_options(flt_test PRIVATE -Wall -Wextra)
+target_compile_options(flt_test PRIVATE "$<$<CONFIG:DEBUG>:${DEBUG_OPTIONS}>")
+target_compile_options(flt_test PRIVATE "$<$<CONFIG:RELEASE>:${RELEASE_OPTIONS}>")
+target_compile_features(flt_test PRIVATE cxx_std_17)
+target_link_libraries(flt_test PUBLIC flt)
+set_target_properties(flt_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY "..")
